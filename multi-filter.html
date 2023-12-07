@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      #img {
+        width: 100%;
+        height: 100px;
+        object-fit: contain;
+        border-radius: 500%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5 p-5 text-center">
+      <div class="row mt-3 mb-5">
+        <select
+          name=""
+          id="select"
+          class="form-control"
+          onclick="filterData(this.value)"
+        >
+          <option value="all">Select All Students!</option>
+        </select>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Student Name</th>
+            <th>Student Father Name</th>
+            <th>Class</th>
+            <th>Contact</th>
+            <th>
+              Gender
+              <select
+                name=""
+                id="sel_gender"
+                onclick="filterGender(this.value)"
+              >
+                <option value="all">ALL</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </th>
+            <th>
+              Dept
+              <select name="" id="sel_dept" onclick="filterdept(this.value)">
+                <option value="all">ALL</option>
+                <option value="bio">Bio</option>
+                <option value="engineering">Engineering</option>
+              </select>
+            </th>
+            <th>Profile</th>
+          </tr>
+        </thead>
+        <tbody id="table_body"></tbody>
+      </table>
+    </div>
+
+    <script src="student.js"></script>
+
+    <script>
+      function displayData() {
+        for (var i = 0; i < data.length; i = i + 1) {
+          document.getElementById("table_body").innerHTML += `
+                <tr>
+                    <td>${data[i].id}</td>
+                        <td>${data[i].Name}</td>
+                        <td>${data[i].f_Name}</td>
+                        <td>${data[i].class}</td>
+                        <td>${data[i].contact}</td>
+                         <td>${data[i].gender}</td>
+                          <td>${data[i].dept}</td>
+                        <td><img src="${data[i].profile}" alt="" id='img'></td>
+                </tr>
+                
+                `;
+          document.getElementById("select").innerHTML += `
+                 <option value="${i}">${i} </option>
+                
+                `;
+        }
+      }
+      function filterData(id) {
+        if (id === "all") {
+          document.getElementById("table_body").innerHTML = "";
+          document.getElementById(
+            "select"
+          ).innerHTML = `<option value='all'>Select All Students!</option>`;
+          displayData();
+        } else {
+          let dataToMap = data.filter((d) => d.id == id);
+          for (var i = 0; i < dataToMap.length; i = i + 1) {
+            document.getElementById("table_body").innerHTML = `
+                  <tr>
+                      <td>${dataToMap[i].id}</td>
+                          <td>${dataToMap[i].Name}</td>
+                          <td>${dataToMap[i].f_Name}</td>
+                          <td>${dataToMap[i].class}</td>
+                          <td>${dataToMap[i].contact}</td>
+                          <td>${dataToMap[i].gender}</td>
+                          <td>${dataToMap[i].dept}</td>
+                          <td><img src="${dataToMap[i].profile}" alt="" id='img'></td>
+                  </tr>
+                  `;
+          }
+        }
+      }
+      function filterGender(val) {
+        const deptFilter = document.getElementById("sel_dept").value;
+        if (val === "all" && deptFilter === "all") {
+          document.getElementById("table_body").innerHTML = "";
+          // document.getElementById("sel_gender").innerHTML = `<option value='all'>Select All Students!</option>`;
+          displayData();
+        } else {
+          document.getElementById("table_body").innerHTML = "";
+          let gender = val.toLowerCase();
+          let dataToMap = data.filter((d) => {
+            return (
+              (d.gender.toLowerCase() === gender || gender === "all") &&
+              (d.dept.toLowerCase() === deptFilter || deptFilter === "all")
+            );
+          });
+          for (var i = 0; i < dataToMap.length; i = i + 1) {
+            document.getElementById("table_body").innerHTML += `
+                  <tr>
+                      <td>${dataToMap[i].id}</td>
+                          <td>${dataToMap[i].Name}</td>
+                          <td>${dataToMap[i].f_Name}</td>
+                          <td>${dataToMap[i].class}</td>
+                          <td>${dataToMap[i].contact}</td>
+                          <td>${dataToMap[i].gender}</td>
+                          <td>${dataToMap[i].dept}</td>
+                          <td><img src="${dataToMap[i].profile}" alt="" id='img'></td>
+                  </tr>
+                  `;
+          }
+        }
+      }
+      function filterdept(val) {
+        const genderFilter = document.getElementById("sel_gender").value;
+        
+        if (val === "all" && genderFilter === "all") {
+          document.getElementById("table_body").innerHTML = "";
+          displayData();
+        } else {
+          document.getElementById("table_body").innerHTML = "";
+          let dept = val.toLowerCase();
+          let dataToMap = data.filter((d) => {
+            return (
+              (d.gender.toLowerCase() === genderFilter ||
+                genderFilter === "all") &&
+              (d.dept.toLowerCase() === val || val === "all")
+            );
+          });
+          for (var i = 0; i < dataToMap.length; i = i + 1) {
+            document.getElementById("table_body").innerHTML += `
+                  <tr>
+                      <td>${dataToMap[i].id}</td>
+                          <td>${dataToMap[i].Name}</td>
+                          <td>${dataToMap[i].f_Name}</td>
+                          <td>${dataToMap[i].class}</td>
+                          <td>${dataToMap[i].contact}</td>
+                          <td>${dataToMap[i].gender}</td>
+                          <td>${dataToMap[i].dept}</td>
+                          <td><img src="${dataToMap[i].profile}" alt="" id='img'></td>
+                  </tr>
+                  `;
+          }
+        }
+      }
+
+      displayData();
+    </script>
+  </body>
+</html>
